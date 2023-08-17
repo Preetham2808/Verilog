@@ -1,0 +1,36 @@
+module counter
+# (parameter cnt_width = 3)
+(
+input clk,
+input reset,
+output reg counter
+);
+
+always @(posedge clk or negedge reset) begin
+  if(!reset) 
+     counter<= 0;
+  else
+    counter<= counter +1'b1;
+  end
+
+endmodule
+
+module tb_counter();
+
+parameter cnt_width=3;
+reg clk;
+reg reset;
+wire counter;
+
+#(parameter .cnt_width(cnt_width));
+counter count1 (.clk(clk),.reset(reset),.counter(counter));
+
+#0.5; always  begin clk=-clk end
+
+initial begin
+$monitor($time,"counter=%d",counter);
+#1 reset=0;
+#1.2 reset=1;
+#20 $stop;
+end
+endmodule
